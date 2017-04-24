@@ -1,0 +1,12 @@
+target/
+.idea/
+src/main/resources/
+data/
+*~
+*.crc
+*.txt
+*.properties
+*.dat
+*.properties
+*.conf
+*.csv
