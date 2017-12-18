@@ -7,7 +7,6 @@ import java.util.*;
  */
 public class Twitter4jJSonStorer {
 
-
     private static Twitter4jJSonStorer instance = null;
 
     public static Twitter4jJSonStorer getInstance(){
@@ -25,11 +24,11 @@ public class Twitter4jJSonStorer {
     private Set<Object> isRequested = new HashSet<>();
     private int queueLimit = 100000;
 
-    public void setQueueLimit(int queueLimit){
-        this.queueLimit =queueLimit;
+    public synchronized void setQueueLimit(int queueLimit){
+        this.queueLimit = queueLimit;
     }
 
-    public void addObjectJSon(Object tweet, String json){
+    public synchronized void addObjectJSon(Object tweet, String json){
         jsonByTweet.put(tweet,json);
         queue.add(tweet);
 
@@ -46,24 +45,24 @@ public class Twitter4jJSonStorer {
         }
     }
 
-    public String getJSonOf(Object object){
-        if(jsonByTweet.containsKey(object)){
+    public synchronized String getJSonOf(Object object){
+        if (jsonByTweet.containsKey(object)) {
             isRequested.add(object);
             return jsonByTweet.get(object);
-        }else{
-            throw new IllegalArgumentException("Object '"+object+"' not found");
+        } else {
+            throw new IllegalArgumentException("Object '" + object + "' not found");
         }
     }
 
-    public void deleteJSonOf(Object object){
-        if(jsonByTweet.containsKey(object)){
-             jsonByTweet.remove(object);
-        }else{
-            throw new IllegalArgumentException("Object '"+object+"' not found");
+    public synchronized void deleteJSonOf(Object object){
+        if (jsonByTweet.containsKey(object)) {
+            jsonByTweet.remove(object);
+        } else {
+            throw new IllegalArgumentException("Object '" + object + "' not found");
         }
     }
 
-    public boolean contains(Object object){
+    public synchronized boolean contains(Object object){
         return jsonByTweet.containsKey(object);
     }
 }
